@@ -53,13 +53,6 @@ export default function GameScreen() {
     })
   )
 
-  // Start the first round when screen loads without an item
-  useEffect(() => {
-    if (!item) {
-      startRound()
-    }
-  }, [item, startRound])
-
   // Handle overpay animation cleanup
   useEffect(() => {
     if (overpayAnimating) {
