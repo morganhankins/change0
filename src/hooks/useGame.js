@@ -27,11 +27,15 @@ export function useGame() {
    * Starts a new round: picks a random customer (different from last)
    * and a random item for the current level, then dispatches START_ROUND.
    */
-  const startRound = useCallback(() => {
+  /**
+   * Starts a new round. Accepts an optional overrideLevel so the first
+   * round can be started from an event handler (before state.level updates).
+   */
+  const startRound = useCallback((overrideLevel) => {
     const lastId = state.customer?.id
     const available = CUSTOMERS.filter(c => c.id !== lastId)
     const customer = available[Math.floor(Math.random() * available.length)]
-    const item = getRandomItem(state.level)
+    const item = getRandomItem(overrideLevel ?? state.level)
     dispatch({ type: 'START_ROUND', payload: { customer, item } })
   }, [state.customer, state.level])
 

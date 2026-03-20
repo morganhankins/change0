@@ -18,12 +18,14 @@ export default function App() {
       ? 100 - state.item.priceCents
       : state.item?.priceCents ?? 0
 
-  // Kick off the first round whenever we enter playing with no item yet
+  // Kick off subsequent rounds when NEXT_ROUND clears the item mid-game.
+  // The very first round is started directly from the DifficultySelect click
+  // handler (via onSelect below) to avoid StrictMode double-firing this effect.
   useEffect(() => {
-    if (state.screen === 'playing' && !state.item) {
+    if (state.screen === 'playing' && !state.item && state.currentRound > 0) {
       startRound()
     }
-  }, [state.screen, state.item, startRound])
+  }, [state.screen, state.item, state.currentRound, startRound])
 
   const contextValue = { state, dispatch, startRound, targetCents }
 
@@ -32,6 +34,7 @@ export default function App() {
       <DifficultySelect
         onSelect={(level) => {
           dispatch({ type: 'SET_LEVEL', payload: level })
+          startRound(level)
         }}
       />
     )
