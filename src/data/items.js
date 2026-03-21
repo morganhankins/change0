@@ -45,7 +45,9 @@ const ITEMS = [
  * @returns {{ name: string, emoji: string, priceCents: number, level: number }}
  */
 export function getRandomItem(level) {
-  const pool = ITEMS.filter(item => item.level === level)
+  // Level 0 (Easy Peasy) shares items with Level 1
+  const effectiveLevel = level === 0 ? 1 : level
+  const pool = ITEMS.filter(item => item.level === effectiveLevel)
   return pool[Math.floor(Math.random() * pool.length)]
 }
 

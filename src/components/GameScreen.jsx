@@ -44,6 +44,8 @@ export default function GameScreen() {
   const totalCents = coinsInRegister.reduce((s, c) => s + c.valueCents, 0)
   const isOverpaying = totalCents > targetCents
   const isCorrect = lastSubmitResult === 'correct'
+  // In Easy mode (level 1) hide the running total until the kid has tried twice
+  const showTotal = level !== 1 || submitAttempts >= 2
 
   // dnd-kit sensors
   const sensors = useSensors(
@@ -163,11 +165,22 @@ export default function GameScreen() {
               />
             </div>
             <div className="flex flex-col items-center justify-center gap-1 min-w-[80px]">
-              <RunningTotal
-                totalCents={totalCents}
-                priceCents={targetCents}
-                isOverpaying={isOverpaying}
-              />
+              {showTotal ? (
+                <RunningTotal
+                  totalCents={totalCents}
+                  priceCents={targetCents}
+                  isOverpaying={isOverpaying}
+                />
+              ) : (
+                <div className="flex flex-col items-center gap-1">
+                  <div className="text-5xl font-extrabold text-gray-300">?</div>
+                  {submitAttempts === 1 && (
+                    <div className="text-xs font-semibold text-gray-400 text-center">
+                      1 more try<br />for a hint!
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 

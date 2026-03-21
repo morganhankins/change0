@@ -2,11 +2,17 @@ import { motion } from 'framer-motion'
 
 const LEVELS = [
   {
+    level: 0,
+    label: 'Easy Peasy 🌟',
+    description: 'Count out the price with coins · See your total as you go',
+    bg: 'bg-sky-400',
+    hover: 'hover:bg-sky-500',
+  },
+  {
     level: 1,
     label: 'Easy — Coins Only',
-    description: 'Count out the price with coins · Pennies, nickels, dimes & quarters',
+    description: 'Count out the price with coins · No total shown (hint after 2 tries)',
     bg: 'bg-emerald',
-    border: 'border-emerald',
     hover: 'hover:bg-green-600',
   },
   {
@@ -14,7 +20,6 @@ const LEVELS = [
     label: 'Medium — Bills & Coins',
     description: 'Count out the price with bills & coins · Prices under $5',
     bg: 'bg-amber',
-    border: 'border-amber',
     hover: 'hover:bg-yellow-500',
   },
   {
@@ -22,7 +27,6 @@ const LEVELS = [
     label: 'Hard — Exact Change',
     description: 'Make exact change from $1 · No rounding allowed',
     bg: 'bg-terracotta',
-    border: 'border-terracotta',
     hover: 'hover:bg-red-500',
   },
 ]
@@ -70,7 +74,7 @@ export default function DifficultySelect({ onSelect }) {
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
             onClick={() => onSelect(level)}
-            className={`w-full rounded-2xl px-8 py-5 text-left text-white shadow-lg transition-colors ${bg} ${hover} focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-wood`}
+            className={`w-full rounded-2xl px-8 py-5 text-left text-white shadow-lg transition-colors ${bg} ${hover} focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-amber`}
           >
             <div className="text-2xl font-extrabold">{label}</div>
             <div className="mt-1 text-base font-semibold opacity-90">{description}</div>
