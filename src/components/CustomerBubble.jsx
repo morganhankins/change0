@@ -11,8 +11,8 @@ export default function CustomerBubble({ customer, item, level }) {
 
   const speechText =
     level === 3
-      ? `Hi! I have $1.00 ${item.emoji}. Can you give me change for a ${item.name} that costs ${toDisplayDollars(item.priceCents)}?`
-      : `Hi! I'd like a ${item.name} ${item.emoji} for ${toDisplayDollars(item.priceCents)} please!`
+      ? `Hi! I have $1.00. Can you give me change for a ${item.name} ${item.emoji} that costs ${toDisplayDollars(item.priceCents)}?`
+      : `I want to buy a ${item.name} ${item.emoji}! It costs ${toDisplayDollars(item.priceCents)}. Can you make that amount for me?`
 
   return (
     <div className="flex items-center justify-center gap-6 h-full px-4">

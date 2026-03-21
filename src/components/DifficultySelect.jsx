@@ -4,7 +4,7 @@ const LEVELS = [
   {
     level: 1,
     label: 'Easy — Coins Only',
-    description: 'Prices under $1 · Use pennies, nickels, dimes & quarters',
+    description: 'Count out the price with coins · Pennies, nickels, dimes & quarters',
     bg: 'bg-emerald',
     border: 'border-emerald',
     hover: 'hover:bg-green-600',
@@ -12,7 +12,7 @@ const LEVELS = [
   {
     level: 2,
     label: 'Medium — Bills & Coins',
-    description: 'Prices under $5 · Add dollar bills to the mix',
+    description: 'Count out the price with bills & coins · Prices under $5',
     bg: 'bg-amber',
     border: 'border-amber',
     hover: 'hover:bg-yellow-500',
