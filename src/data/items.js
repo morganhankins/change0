@@ -1,54 +1,71 @@
-import { CUSTOMERS } from './customers'
+/**
+ * Generates a random price in [minCents, maxCents].
+ * 75% of the time snaps to a multiple of 5 (round amount).
+ * 25% of the time picks any cent value in range.
+ */
+function randomPrice(minCents, maxCents) {
+  if (Math.random() < 0.75) {
+    const minRound = Math.ceil(minCents / 5) * 5
+    const maxRound = Math.floor(maxCents / 5) * 5
+    const steps = (maxRound - minRound) / 5
+    return minRound + Math.floor(Math.random() * (steps + 1)) * 5
+  }
+  return minCents + Math.floor(Math.random() * (maxCents - minCents + 1))
+}
 
 /**
- * Shop items organized by difficulty level.
- *
- * Level 1: Prices 10–99 cents (rounded to 5¢) — coins only
- * Level 2: Prices $1.05–$4.95 — bills and coins
- * Level 3: Prices 15–95 cents — used to calculate change from $1.00
+ * Shop items: name + emoji only. Prices are generated fresh each round
+ * by getRandomItem() so amounts vary across playthroughs.
  */
 const ITEMS = [
-  // Level 1 — coins only, under $1
-  { name: 'Apple',      emoji: '🍎', priceCents: 47,  level: 1 },
-  { name: 'Cookie',     emoji: '🍪', priceCents: 35,  level: 1 },
-  { name: 'Banana',     emoji: '🍌', priceCents: 52,  level: 1 },
-  { name: 'Juice Box',  emoji: '🧃', priceCents: 85,  level: 1 },
-  { name: 'Lollipop',   emoji: '🍭', priceCents: 25,  level: 1 },
-  { name: 'Gum',        emoji: '🍬', priceCents: 15,  level: 1 },
-  { name: 'Pretzel',    emoji: '🥨', priceCents: 60,  level: 1 },
-  { name: 'Sticker',    emoji: '⭐', priceCents: 10,  level: 1 },
+  // Levels 1/0 — coins only, under $1
+  { name: 'Apple',      emoji: '🍎', level: 1 },
+  { name: 'Cookie',     emoji: '🍪', level: 1 },
+  { name: 'Banana',     emoji: '🍌', level: 1 },
+  { name: 'Juice Box',  emoji: '🧃', level: 1 },
+  { name: 'Lollipop',   emoji: '🍭', level: 1 },
+  { name: 'Gum',        emoji: '🍬', level: 1 },
+  { name: 'Pretzel',    emoji: '🥨', level: 1 },
+  { name: 'Sticker',    emoji: '⭐', level: 1 },
 
   // Level 2 — bills and coins, $1.05–$4.95
-  { name: 'Pizza Slice', emoji: '🍕', priceCents: 175, level: 2 },
-  { name: 'Hot Dog',     emoji: '🌭', priceCents: 135, level: 2 },
-  { name: 'Ice Cream',   emoji: '🍦', priceCents: 250, level: 2 },
-  { name: 'Sandwich',    emoji: '🥪', priceCents: 395, level: 2 },
-  { name: 'Cupcake',     emoji: '🧁', priceCents: 165, level: 2 },
-  { name: 'Lemonade',    emoji: '🍋', priceCents: 125, level: 2 },
-  { name: 'Taco',        emoji: '🌮', priceCents: 285, level: 2 },
-  { name: 'Donut',       emoji: '🍩', priceCents: 110, level: 2 },
+  { name: 'Pizza Slice', emoji: '🍕', level: 2 },
+  { name: 'Hot Dog',     emoji: '🌭', level: 2 },
+  { name: 'Ice Cream',   emoji: '🍦', level: 2 },
+  { name: 'Sandwich',    emoji: '🥪', level: 2 },
+  { name: 'Cupcake',     emoji: '🧁', level: 2 },
+  { name: 'Lemonade',    emoji: '🍋', level: 2 },
+  { name: 'Taco',        emoji: '🌮', level: 2 },
+  { name: 'Donut',       emoji: '🍩', level: 2 },
 
-  // Level 3 — make exact change from $1.00, prices 15–95 cents
-  { name: 'Marble',     emoji: '🔮', priceCents: 15,  level: 3 },
-  { name: 'Eraser',     emoji: '✏️', priceCents: 25,  level: 3 },
-  { name: 'Pencil',     emoji: '📝', priceCents: 35,  level: 3 },
-  { name: 'Bookmark',   emoji: '🔖', priceCents: 45,  level: 3 },
-  { name: 'Button',     emoji: '🪡', priceCents: 55,  level: 3 },
-  { name: 'Key Chain',  emoji: '🗝️', priceCents: 65,  level: 3 },
-  { name: 'Badge',      emoji: '🏅', priceCents: 75,  level: 3 },
-  { name: 'Ribbon',     emoji: '🎀', priceCents: 85,  level: 3 },
+  // Level 3 — make exact change from $1.00
+  { name: 'Marble',    emoji: '🔮', level: 3 },
+  { name: 'Eraser',    emoji: '✏️', level: 3 },
+  { name: 'Pencil',    emoji: '📝', level: 3 },
+  { name: 'Bookmark',  emoji: '🔖', level: 3 },
+  { name: 'Button',    emoji: '🪡', level: 3 },
+  { name: 'Key Chain', emoji: '🗝️', level: 3 },
+  { name: 'Badge',     emoji: '🏅', level: 3 },
+  { name: 'Ribbon',    emoji: '🎀', level: 3 },
 ]
 
+/** Price ranges per level [minCents, maxCents] */
+const PRICE_RANGE = {
+  1: [10, 95],
+  2: [105, 495],
+  3: [15, 85],
+}
+
 /**
- * Returns a random item for the given difficulty level.
- * @param {1|2|3} level
- * @returns {{ name: string, emoji: string, priceCents: number, level: number }}
+ * Returns a random item with a freshly generated price for the given level.
+ * Level 0 (Easy Peasy) uses level 1 items and price range.
  */
 export function getRandomItem(level) {
-  // Level 0 (Easy Peasy) shares items with Level 1
   const effectiveLevel = level === 0 ? 1 : level
   const pool = ITEMS.filter(item => item.level === effectiveLevel)
-  return pool[Math.floor(Math.random() * pool.length)]
+  const item = pool[Math.floor(Math.random() * pool.length)]
+  const [min, max] = PRICE_RANGE[effectiveLevel]
+  return { ...item, priceCents: randomPrice(min, max) }
 }
 
 /**
@@ -61,5 +78,3 @@ export function getRandomCustomer(customers, excludeId) {
   const available = customers.filter(c => c.id !== excludeId)
   return available[Math.floor(Math.random() * available.length)]
 }
-
-export default ITEMS
